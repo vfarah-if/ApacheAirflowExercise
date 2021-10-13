@@ -52,7 +52,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
     - **catchup**: Should this rerun because of a prior error if set to true
 
-    - others parameters exist but those are the core params to run with 
+    - **Other parameters** exist but those are the core params to run with, including default_args
 
       ```python
       from airflow import DAG
@@ -70,10 +70,6 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
           # Actual implementation to run to completion ...
       ```
 
-  - Operators define mechanisms of action, like the PythonOperator
-
-    ![image-20211013093831004](./operators.png)
-
   - Workflows are visually shown in the UI in the order they will execute on the web server using the scheduler
 
     ![image-20211013094031105](./workflow-sequence.png)
@@ -82,7 +78,19 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
     `Schedular => Meta DB => Webserver => Execute workflows using the executor `
 
-  - TODO: Contunue from here
+  - **Operators** represent tasks with a large amount at the Airflow disposal e.g. BashOperator, PythonOperator, PostgresOperator, SlackWebhookOperator
+
+    ![image-20211013093831004](./operators.png)
+
+  - *Configuring settings* for some of these can be done through the **Admin** e.g. Connections for anything external and define settings based on the type
+
+    ![image-20211013154006254](./admin-configuration.png)
+
+  - In the code, define **dependencies** by using the >> bit shift operator
+
+    ![image-20211013154810116](./dependencies-bitshift-operator.png)
+
+  - Workflows can not be infinite, so no loops
 
 - Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally
 
