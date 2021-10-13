@@ -12,6 +12,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
   ```makefile
   // Start it up
   make aaf-up
+  // Shut it down and clear it
   make aaf-down
   ```
 
@@ -81,7 +82,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
     `Schedular => Meta DB => Webserver => Execute workflows using the executor `
 
-  - The executor 
+  - TODO: Contunue from here
 
 - Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally
 
