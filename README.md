@@ -201,8 +201,32 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
     - **worker_concurrency**: How many Taskinstances for a *worker*
     - **parallelism**: How many TaksInstances in *Airflow*
 
+- **Testing** your dag can be done using pytest and *DagBag* see https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html for more information
+
+    ```python
+    import pytest
+    
+    from airflow.models import DagBag
+    
+    
+    @pytest.fixture()
+    def dagbag(self):
+        return DagBag()
+    
+    
+    def test_dag_loaded(self, dagbag):
+        dag = dagbag.get_dag(dag_id="hello_world")
+        assert dagbag.import_errors == {}
+        assert dag is not None
+        assert len(dag.tasks) == 1
+    ```
+
+## Local simple Exercise
+
+TODO: Setup a postgres database, configure some kind of json file/api to load all the latest prices and an environment that will run through docker
+
 ## References
 
 - https://app.pluralsight.com/library/courses/productionalizing-data-pipelines-apache-airflow/table-of-contents and working examples can be found at https://github.com/axel-sirota/productionalizing-data-pipelines-airflow
-- Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally
+- Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally and this works with the example shown in the Apache tutorial
 
