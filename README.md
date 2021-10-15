@@ -92,9 +92,119 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
   - Workflows can not be infinite, so no loops
 
-- Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally
+  - **Branching logic** can be done through the **BranchPythonOperator**
+
+    ```python
+    def is_tuesday(*args, **context):
+        execution_date = context['execution_date']
+        weekday = execution_date.in_timezone("Europe/London").weekday()
+        return 'create_report' if weekday == 1 else 'none'
+    
+      is_tuesday_task = BranchPythonOperator(
+            task_id='is_tuesday',
+            python_callable=is_tuesday,
+            provide_context=True
+        )
+      
+      save_into_db >> is_tuesday_task >> [create_report, none]
+    ```
+
+  - **Trigger rule** is an alternate way of triggering on things like *all_success, all_failed, one_success, one_failed*, *all_done* and *none_failed*
+
+    ```python
+    notify_file_failed = SlackWebhookOperator(
+      task_id='notify_file_failed',
+      http_conn_id='slack_conn',
+      webhook_token=slack_token,
+      message="Error Notification ..."
+      trigger_rule='all_failed',  
+    ```
+
+- **Custom operators** can be created by inheriting from the *BaseOperator* within the Airflow.models which calls the *execute* method
+
+    ```python
+    from airflow.models import BaseOperator
+    
+    class MyCustomOperator(BaseOperator):
+        template_fields = ['mongo_query']
+    
+        def __init__(self,
+                     custom_conn_id,
+                     *args, **kwargs):
+            super(MyCustomOperator, self).__init__(*args, **kwargs)
+            # Conn Ids
+            self.custom_conn_id = custom_conn_id
+    
+    
+        def execute(self, context):
+            """
+            Executed by task_instance at runtime
+            """
+            custom_conn = CustomHook(self.custom_conn_id).get_conn()
+    ```
+
+    - **Usage** of the custom operator can be through Python or plugins declared in the *init package* of the python file
+
+        ```python
+        # __init__.py and COPY mongo_plugin $AIRFLOW_HOME/plugins
+        from hooks.custom_hook import CustomHook
+        from operators.custom_operator import CustomOperator
+        
+        
+        class CustomPlugin(AirflowPlugin):
+            name = "custom_plugin"
+            operators = [CustomOperator]
+            hooks = [CustomHook]
+            executors = []
+            macros = []
+            admin_views = []
+            flask_blueprints = []
+            menu_links = []
+           
+        ```
+
+- **Access variables and macros** using {{}} which can also be declared through Admin or in shell scripts
+
+- **Scaling Airflow**
+
+    - **SequentialExecutor** (default) or without parallelism, easiest to setup using a single machine and is good for debugging and developing
+
+    - **LocalExecutor**: relatively easy to setup and brings parallelism
+
+    - **CeleryExecutor**: Runs in multi node architecture
+
+        - When configuring celery, utilise flower, which will setup another worker service in isolation
+
+            ```dockerfile
+             flower:
+                build: docker/airflow
+                image: pluralsight/airflow
+                restart: always
+                container_name: flower
+                depends_on:
+                    - redis
+                    - webserver
+                environment:
+                    - EXECUTOR=CeleryExecutor
+                    - REDIS_PASSWORD=****
+                ports:
+                    - "5555:5555"
+                command: flower
+            ```
+
+        ![image-20211015112120251](./flower.png)
+
+- **Concurrency Parameters**
+
+    - **task_concurrency**: How many TaskInstances for a *task*
+    - **dag_concurrency**: How many TaskInstances for a *dag*
+    - **worker_concurrency**: How many Taskinstances for a *worker*
+    - **parallelism**: How many TaksInstances in *Airflow*
+
+- 
 
 ## References
 
 - https://app.pluralsight.com/library/courses/productionalizing-data-pipelines-apache-airflow/table-of-contents and working examples can be found at https://github.com/axel-sirota/productionalizing-data-pipelines-airflow
+- Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally
 
