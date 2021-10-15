@@ -163,7 +163,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
            
         ```
 
-- **Access variables and macros** using {{}} which can also be declared through Admin or in shell scripts
+- **Access variables and macros** using {{}} which can also be declared through Admin or in shell scripts uses a Jinja template format, used within the `execute()` method of the operators, see more on utilising the [secrets backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html#secrets-backend-configuration) for securing values
 
 - **Scaling Airflow**
 
