@@ -32,7 +32,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
   - A DAG is defined in a ***Python script*** and needs to be in a dags folder
 
-  - a DAG describes ***how*** you want to carry out your workflow
+  - A DAG describes ***how*** you want to carry out your workflow
 
   - The happy flow consists of the following stages:
 
@@ -78,7 +78,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
     `Schedular => Meta DB => Webserver => Execute workflows using the executor `
 
-  - **Operators** represent tasks with a large amount at the Airflow disposal e.g. BashOperator, PythonOperator, PostgresOperator, SlackWebhookOperator
+  - **Operators** represent tasks with a large amount at the Airflow disposal e.g. *BashOperator, PythonOperator, PostgresOperator, SlackWebhookOperator*
 
     ![image-20211013093831004](./operators.png)
 
@@ -92,7 +92,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
   - **NOTE**: Workflows can not be infinite, so no loops
 
-  - **Branching logic** can be done through the **BranchPythonOperator**
+  - **Branching logic** can be done through the *BranchPythonOperator*
 
     ```python
     def is_tuesday(*args, **context):
