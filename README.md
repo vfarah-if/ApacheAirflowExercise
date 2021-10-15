@@ -90,7 +90,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
 
     ![image-20211013154810116](./dependencies-bitshift-operator.png)
 
-  - Workflows can not be infinite, so no loops
+  - **NOTE**: Workflows can not be infinite, so no loops
 
   - **Branching logic** can be done through the **BranchPythonOperator**
 
@@ -200,8 +200,6 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
     - **dag_concurrency**: How many TaskInstances for a *dag*
     - **worker_concurrency**: How many Taskinstances for a *worker*
     - **parallelism**: How many TaksInstances in *Airflow*
-
-- 
 
 ## References
 
