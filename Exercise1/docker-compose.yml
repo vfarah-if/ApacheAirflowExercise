@@ -2,7 +2,7 @@ version: '2.1'
 services:
   postgres:
     build: ./docker/postgres
-    image: exchange_rates/postgres
+    image: exercise1/postgres
     restart: always
     container_name: postgres
     ports:
@@ -19,7 +19,7 @@ services:
 
   airflow:
     build: ./docker/airflow
-    image: exchange_rates/airflow
+    image: exercise1/airflow
     restart: always
     container_name: airflow
     environment:

@@ -1,3 +1,3 @@
 CREATE ROLE postgres LOGIN SUPERUSER PASSWORD 'postgres';
-CREATE DATABASE exchange_rates;
-GRANT ALL PRIVILEGES ON DATABASE exchange_rates to airflow;
+CREATE DATABASE exercise1;
+GRANT ALL PRIVILEGES ON DATABASE exercise1 to airflow;
