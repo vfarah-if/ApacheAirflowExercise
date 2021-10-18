@@ -201,6 +201,28 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
     - **worker_concurrency**: How many Taskinstances for a *worker*
     - **parallelism**: How many TaksInstances in *Airflow*
 
+- **XComs** (short for "cross-communications") are a mechanism that let Tasks talk to each other, as by default Tasks are entirely isolated and may be running on entirely different machines. This is one of the many underused concepts of AA, see [this](https://www.datafold.com/blog/3-most-underused-features-of-apache-airflow) for more information on other exceptions
+
+    - The reason this is useful, in my opinion, is for setting and getting values from Operations, for example usgae with SimpleHttpOperator and returning the reponse into a JSON object to share with the rest
+    
+    - If you return a value from a function, this value is stored in xcom. In your case, you could access it like so from other Python code:
+    
+        ```python
+        task_instance = kwargs['task_instance']
+        task_instance.xcom_pull(task_ids='Task1')
+        # or in template
+        {{ task_instance.xcom_pull(task_ids='Task1') }}
+        ```
+    
+    - If you want to push a value 
+    
+        ```python
+        task_instance = kwargs['task_instance']
+        task_instance.xcom_push(key='the_key', value=my_str)
+        # Later it can be called with
+        task_instance.xcom_pull(task_ids='my_task', key='the_key')
+        ```
+    
 - **Testing** your dag can be done using pytest and *DagBag* see https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html for more information
 
     ```python
@@ -208,11 +230,9 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
     
     from airflow.models import DagBag
     
-    
     @pytest.fixture()
     def dagbag(self):
         return DagBag()
-    
     
     def test_dag_loaded(self, dagbag):
         dag = dagbag.get_dag(dag_id="hello_world")
@@ -221,12 +241,42 @@ Why should you learn AA? Extensibility, Reliability, Scalable and ale to guarant
         assert len(dag.tasks) == 1
     ```
 
-## Local simple Exercise
+## Exercise 1
 
-TODO: Setup a postgres database, configure some kind of json file/api to load all the latest prices and an environment that will run through docker
+Example for [Exercise 1](./Exercise1) creates two Dags for dealing with currencies of countries all over the world and then setting a postgres table with *currency codes* and *exchange rates*.
+
+**NOTE:**You need to setup and configure an exchange rate api key on https://manage.exchangeratesapi.io/dashboard and then either configure the correct URL within the [start-airflow.sh script](Exercise1/docker/airflow/start-airflow.sh)  or manually modify the admin value every time you deploy your docker instance with the correct api key. Leaving it will show. fail scenario and only the base json file will be imported (good example to see a failing scenario anyway)
+
+```bash
+airflow variables --json --set 'exchange_url' 'http://api.exchangeratesapi.io/v1/latest?access_key=<Your Access Key>'
+```
+
+**TODO** Develop good tests and test drive the changes below
+
+**TODO** Document the interesting bits of the Exercise
+
+**TODO** Create one that runs in parallel
+
+**TODO** Create a custom dag for the API using the reference below
+
+**TODO** Create one using a proper setup ORM
 
 ## References
 
 - https://app.pluralsight.com/library/courses/productionalizing-data-pipelines-apache-airflow/table-of-contents and working examples can be found at https://github.com/axel-sirota/productionalizing-data-pipelines-airflow
 - Alternatively follow the video found [here](https://www.youtube.com/watch?v=k-9GQa2eAsM) for links to doing it locally and this works with the example shown in the Apache tutorial
+- [3 most under used features of Apache Airflow](https://www.datafold.com/blog/3-most-underused-features-of-apache-airflow)
+- Useful [custom operator example](https://www.titanwolf.org/Network/q/1e3a5087-aa04-4e01-b526-d0d4f41c7d66/y) with test and an example of how to configure using x-com
+- Adding [logger](https://newbedev.com/adding-logs-to-airflow-logs) to the dag
+- Setting [variables](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html#variables) can be done through the commandline
+- Postgres summary of some key ideas that will be needed
+  - [Datatypes](https://www.geeksforgeeks.org/postgresql-data-types/) and [more types](https://www.postgresql.org/docs/10/datatype.html)
+  - [Foreign key](https://www.postgresqltutorial.com/postgresql-foreign-key/) setup
+  - [Identity column](https://www.postgresqltutorial.com/postgresql-identity-column/) setup
+  - [Create table](https://www.postgresqltutorial.com/postgresql-create-table/) setup
+- [Pandas documentation](https://pandas.pydata.org/docs/getting_started/index.html) and about working with tabular data, such as data stored in spreadsheets or databases
+- [SQL Alchemy documents](https://docs.sqlalchemy.org/en/14/intro.html) and [git repository](https://github.com/sqlalchemy/sqlalchemy) for more on a very useful [ORM](https://docs.sqlalchemy.org/en/14/orm/index.html)
+- Working with [json](https://www.w3schools.com/python/python_json.asp)
+- [Docker image](https://docs.docker.com/engine/reference/commandline/image/) commands
+- 
 
