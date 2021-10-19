@@ -58,7 +58,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
       ```python
       from airflow import DAG
       from airflow.operators.bash import BashOperator
-
+  
       with DAG(
           dag_id='example_bash_operator',
           schedule_interval='0 0 * * *',
@@ -125,10 +125,10 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
 
   ```python
   from airflow.models import BaseOperator
-
+  
   class MyCustomOperator(BaseOperator):
       template_fields = ['mongo_query']
-
+  
       def __init__(self,
                    custom_conn_id,
                    *args, **kwargs):
@@ -162,7 +162,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
         flask_blueprints = []
         menu_links = []
 
-    ```
+  ```
 
 - **Access variables and macros** using {{}} which can also be declared through Admin or in shell scripts uses a Jinja template format, used within the `execute()` method of the operators, see more on utilising the [secrets backend](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html#secrets-backend-configuration) for securing values
 
@@ -228,13 +228,13 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
 
   ```python
   import pytest
-
+  
   from airflow.models import DagBag
-
+  
   @pytest.fixture()
   def dagbag(self):
       return DagBag()
-
+  
   def test_dag_loaded(self, dagbag):
       dag = dagbag.get_dag(dag_id="hello_world")
       assert dagbag.import_errors == {}
@@ -315,4 +315,4 @@ If you don't want to solve the problem, and just want to run the project, naviga
   - [Simple tutorial](https://chartio.com/resources/tutorials/how-to-execute-raw-sql-in-sqlalchemy/#using-sqlalchemy) on basic concepts of Quickly setting up this with an ORM syntax
 - Working with [json](https://www.w3schools.com/python/python_json.asp)
 - [Docker image](https://docs.docker.com/engine/reference/commandline/image/) commands
--
+- The AA version of docker is supported via https://github.com/puckel/docker-airflow and has some working examples for the usage

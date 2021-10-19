@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import json
 import os
 import requests
 import logging
@@ -14,6 +13,8 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 
+from shared import make_engine
+
 logger = logging.getLogger('airflow.task')
 logger.info('Exchange Rates information...')
 
@@ -27,8 +28,7 @@ default_args = {
     'email_on_retry': False,
     'email': 'vincent.farah@madetech.com'
 }
-
-ex_rates_data_path = f'{json.loads(BaseHook.get_connection("data_path").get_extra()).get("path")}/exchange-rates.csv'
+ex_rates_data_path = f'{Variable.get("data_path")}/exchange-rates.csv'
 transformed_ex_rates_path = f'{os.path.splitext(ex_rates_data_path)[0]}-transformed.csv'
 
 def transform_ex_rates_data(*args, **kwargs):
@@ -41,15 +41,11 @@ def transform_ex_rates_data(*args, **kwargs):
                                      )
     ex_rates_data.to_csv(path_or_buf=transformed_ex_rates_path)
 
-def store_ex_rates_in_db(*args, **kwargs):   
+def load_csv_ex_rates_in_db(*args, **kwargs):   
     transformed_ex_rates = pd.read_csv(transformed_ex_rates_path)
     transformed_ex_rates.dropna(axis=0, how='any', inplace=True)
     engine = make_engine()
     transformed_ex_rates.to_sql('ex_rates',engine,if_exists='replace',chunksize=500,index=False)
-
-def make_engine()->Engine:
-    connection_string = 'postgresql://airflow:airflow@postgres/exercise1'
-    return create_engine(connection_string)
 
 def get_ex_rates_from_api():
     url = Variable.get('exchange_url')
@@ -72,14 +68,18 @@ def store_latest_ex_rates_from_api_to_db():
     delete_rates_by_date(date, engine)
     if rates:
         for code, rate in rates.items():            
-            logger.info(f'{code}, {rate}, {base_rate_code}, {date}')            
-            insert_response = engine.execute(
+            add_exchange_rate(date, base_rate_code, engine, code, rate)
+
+def add_exchange_rate(date, base_rate_code, engine, code, rate):
+    logger.info(f'{code}, {rate}, {base_rate_code}, {date}')                       
+    # TODO: Refactor using the ORM    
+    insert_response = engine.execute(
                 f'''
                     INSERT INTO ex_rates(code,rate,base_rate_code,date) 
                     VALUES ('{code}',{rate},'{base_rate_code}','{date}');
                 '''
             )
-            logger.info(f'Created "{insert_response.rowcount}" records')
+    logger.info(f'Created "{insert_response.rowcount}" records')
 
 def delete_rates_by_date(date, engine):
     if date:
@@ -93,13 +93,15 @@ with DAG(dag_id='exchange_rates_dag',
          template_searchpath=[f"{os.environ['AIRFLOW_HOME']}"],
          catchup=False) as dag:
     
+    # TODO: Refactor using ORM
     create_table_ex_rates_if_not_exists = PostgresOperator(
         task_id='create_table_ex_rates_if_not_exists',
         sql='''CREATE TABLE IF NOT EXISTS ex_rates (
                 code VARCHAR(3) NOT NULL,
                 rate DECIMAL NOT NULL,
                 base_code VARCHAR(3) NOT NULL,
-                date DATE NOT NULL
+                date DATE NOT NULL,
+                PRIMARY KEY (code, base_code, date)
                 );''',
         postgres_conn_id='postgres',
         database='exercise1'
@@ -110,9 +112,9 @@ with DAG(dag_id='exchange_rates_dag',
         python_callable=transform_ex_rates_data
     )
 
-    save_ex_rates_into_db = PythonOperator(
-        task_id='save_ex_rates_into_db',
-        python_callable=store_ex_rates_in_db
+    save_csv_ex_rates_in_db = PythonOperator(
+        task_id='save_csv_ex_rates_in_db',
+        python_callable=load_csv_ex_rates_in_db
     )
 
     save_latest_ex_rates_from_api_to_db = PythonOperator(
@@ -120,5 +122,5 @@ with DAG(dag_id='exchange_rates_dag',
         python_callable=store_latest_ex_rates_from_api_to_db
     )
 
-    transform_ex_rates_data >> create_table_ex_rates_if_not_exists >> save_ex_rates_into_db
+    transform_ex_rates_data >> create_table_ex_rates_if_not_exists >> save_csv_ex_rates_in_db
     create_table_ex_rates_if_not_exists >> save_latest_ex_rates_from_api_to_db
