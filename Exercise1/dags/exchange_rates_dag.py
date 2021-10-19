@@ -42,7 +42,7 @@ def transform_ex_rates_data(*args, **kwargs):
                                      )
     ex_rates_data.to_csv(path_or_buf=transformed_ex_rates_path)
 
-def load_csv_ex_rates_in_db(*args, **kwargs):   
+def load_csv_ex_rates_to_db(*args, **kwargs):   
     transformed_ex_rates = pd.read_csv(transformed_ex_rates_path)
     transformed_ex_rates.dropna(axis=0, how='any', inplace=True)
     engine = make_engine()
@@ -113,9 +113,9 @@ with DAG(dag_id='exchange_rates_dag',
         python_callable=transform_ex_rates_data
     )
 
-    save_csv_ex_rates_in_db = PythonOperator(
-        task_id='save_csv_ex_rates_in_db',
-        python_callable=load_csv_ex_rates_in_db
+    save_csv_ex_rates_to_db = PythonOperator(
+        task_id='save_csv_ex_rates_to_db',
+        python_callable=load_csv_ex_rates_to_db
     )
 
     save_latest_ex_rates_from_api_to_db = PythonOperator(
@@ -123,5 +123,5 @@ with DAG(dag_id='exchange_rates_dag',
         python_callable=store_latest_ex_rates_from_api_to_db
     )
 
-    transform_ex_rates_data >> create_table_ex_rates_if_not_exists >> save_csv_ex_rates_in_db
+    transform_ex_rates_data >> create_table_ex_rates_if_not_exists >> save_csv_ex_rates_to_db
     create_table_ex_rates_if_not_exists >> save_latest_ex_rates_from_api_to_db

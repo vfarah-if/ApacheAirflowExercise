@@ -38,7 +38,7 @@ def transform_currency_codes_data(*args, **kwargs):
                                 )
     currency_codes_data.to_csv(path_or_buf=transformed_currency_codes_path)
 
-def load_csv_currency_codes_in_db(*args, **kwargs):
+def load_csv_currency_codes_to_db(*args, **kwargs):
     transformed_currency_codes = pd.read_csv(transformed_currency_codes_path)
     transformed_currency_codes.dropna(axis=0, how='any', inplace=True)
     engine = make_engine()
@@ -68,10 +68,10 @@ with DAG(dag_id='currency_codes_dag',
         database='exercise1'
     )
     
-    save_csv_currency_codes_in_db = PythonOperator(
-         task_id='save_csv_currency_codes_in_db',
-         python_callable=load_csv_currency_codes_in_db
+    save_csv_currency_codes_to_db = PythonOperator(
+         task_id='save_csv_currency_codes_to_db',
+         python_callable=load_csv_currency_codes_to_db
      )
 
-    transform_currency_codes_data >> create_table_currency_codes_if_not_exists >> save_csv_currency_codes_in_db
+    transform_currency_codes_data >> create_table_currency_codes_if_not_exists >> save_csv_currency_codes_to_db
     
