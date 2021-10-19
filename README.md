@@ -246,7 +246,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
 
 Example for [Exercise 1](./Exercise1) creates two Dags for dealing with currencies of countries all over the world and then setting a postgres table with _currency codes_ and _exchange rates_.
 
-**NOTE:**You need to setup and configure an exchange rate api key on https://manage.exchangeratesapi.io/dashboard and then either configure the correct URL within the [start-airflow.sh script](Exercise1/docker/airflow/start-airflow.sh) or manually modify the admin value every time you deploy your docker instance with the correct api key. Leaving it will show. fail scenario and only the base json file will be imported (good example to see a failing scenario anyway). Understanding thre API can be done through https://exchangeratesapi.io/documentation/ where the data updated can be restricted for the purpose of filtering the data, but the base rate change is not working as expected.
+**NOTE:**You need to setup and configure an exchange rate api key on https://manage.exchangeratesapi.io/dashboard and then either configure the correct URL within the [start-airflow.sh script](Exercise1/docker/airflow/start-airflow.sh) or manually modify the admin value every time you deploy your docker instance with the correct api key. Leaving it will show. fail scenario and only the base json file will be imported (good example to see a failing scenario anyway.) Understanding thre API can be done through https://exchangeratesapi.io/documentation/ where the data updated can be restricted for the purpose of filtering the data, but the base rate change is not working as expected.
 
 ```bash
 airflow variables --json --set 'exchange_url' 'http://api.exchangeratesapi.io/v1/latest?access_key=<Your Access Key>'
@@ -296,6 +296,15 @@ If you don't want to solve the problem, and just want to run the project, naviga
 - Navigate to [Exercise1](./Exercise1)
 - setup the API, if you haven't and configure the variables or the system before running
 
+### Environment setup to run Python locally
+
+```shell
+python3.8 -m venv env
+source env/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+```
+
 ## References
 
 - https://app.pluralsight.com/library/courses/productionalizing-data-pipelines-apache-airflow/table-of-contents and working examples can be found at https://github.com/axel-sirota/productionalizing-data-pipelines-airflow
@@ -316,3 +325,5 @@ If you don't want to solve the problem, and just want to run the project, naviga
 - Working with [json](https://www.w3schools.com/python/python_json.asp)
 - [Docker image](https://docs.docker.com/engine/reference/commandline/image/) commands
 - The AA version of docker is supported via https://github.com/puckel/docker-airflow and has some working examples for the usage
+- Testing strategies with Airflow
+  - https://medium.com/wbaa/datas-inferno-7-circles-of-data-testing-hell-with-airflow-cef4adff58d8

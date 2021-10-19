@@ -67,9 +67,18 @@ def store_latest_ex_rates_from_api_to_db():
     logger.info(rates)
     engine = make_engine()    
     delete_rates_by_date(date, engine)
+    add_exchange_rates(date, base_rate_code, rates, engine)
+
+def add_exchange_rates(date, base_rate_code, rates, engine):
     if rates:
+        usd_base_rate = rates['USD']
+        gbp_base_rate = rates['GBP']
         for code, rate in rates.items():            
             add_exchange_rate(date, base_rate_code, engine, code, rate)
+            if usd_base_rate:
+                add_exchange_rate(date, 'USD', engine, code, rate/usd_base_rate)
+            if gbp_base_rate:
+                add_exchange_rate(date, 'GBP', engine, code, rate/gbp_base_rate)
 
 def add_exchange_rate(date, base_rate_code, engine, code, rate):
     logger.info(f'{code}, {rate}, {base_rate_code}, {date}')                       
