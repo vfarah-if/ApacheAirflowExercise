@@ -246,7 +246,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
 
 Example for [Exercise 1](./Exercise1) creates two Dags for dealing with currencies of countries all over the world and then setting a postgres table with _currency codes_ and _exchange rates_.
 
-**NOTE:**You need to setup and configure an exchange rate api key on https://manage.exchangeratesapi.io/dashboard and then either configure the correct URL within the [start-airflow.sh script](Exercise1/docker/airflow/start-airflow.sh) or manually modify the admin value every time you deploy your docker instance with the correct api key. Leaving it will show. fail scenario and only the base json file will be imported (good example to see a failing scenario anyway)
+**NOTE:**You need to setup and configure an exchange rate api key on https://manage.exchangeratesapi.io/dashboard and then either configure the correct URL within the [start-airflow.sh script](Exercise1/docker/airflow/start-airflow.sh) or manually modify the admin value every time you deploy your docker instance with the correct api key. Leaving it will show. fail scenario and only the base json file will be imported (good example to see a failing scenario anyway). Understanding thre API can be done through https://exchangeratesapi.io/documentation/ where the data updated can be restricted for the purpose of filtering the data, but the base rate change is not working as expected.
 
 ```bash
 airflow variables --json --set 'exchange_url' 'http://api.exchangeratesapi.io/v1/latest?access_key=<Your Access Key>'
