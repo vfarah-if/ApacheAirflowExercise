@@ -3,11 +3,11 @@ import pytest
 from airflow.models import DagBag
 
 @pytest.fixture()
-def dagbag(self):
+def dagbag():
     return DagBag()
 
-def test_dag_loaded(self, dagbag):
-    dag = dagbag.get_dag(dag_id="hello_world")
+def test_dag_loaded(dagbag):
+    dag = dagbag.get_dag(dag_id="currency_codes_dag")
     assert dagbag.import_errors == {}
     assert dag is not None
     assert len(dag.tasks) == 1
