@@ -1,0 +1,11 @@
+requests
+pandas
+SQLAlchemy
+# dev stuff
+black
+pip-tools
+pylint
+pytest
+pytest-cov
+pytest-mock
+requests-mock

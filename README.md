@@ -303,6 +303,7 @@ python3.8 -m venv env
 source env/bin/activate
 pip install -U pip
 pip install -r requirements.txt
+pip install apache-airflow==1.10.9
 ```
 
 ## References
