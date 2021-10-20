@@ -12,7 +12,7 @@ airflow variables --json --set 'data_path' 'data'
 airflow connections --add --conn_id 'postgres' --conn_type Postgres --conn_host 'postgres' --conn_login 'airflow' --conn_password 'airflow' --conn_schema 'exercise1'
 # Create an API URL to be utilised with exchange api containing your API key and modify the path below or in the ADMIN folder
 # Register on  https://manage.exchangeratesapi.io/dashboard
-airflow variables --json --set 'exchange_url' 'http://api.exchangeratesapi.io/v1/latest?access_key=GET_YOURS'
+airflow variables --json --set 'exchange_url' 'http://api.exchangeratesapi.io/v1/latest?access_key=59f230496f8a2f714266d4463a5c195c'
 
 exec airflow webserver  &> /dev/null &
 
