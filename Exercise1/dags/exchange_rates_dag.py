@@ -84,11 +84,11 @@ def add_exchange_rate(date, base_rate_code, engine, code, rate):
     logger.info(f'{code}, {rate}, {base_rate_code}, {date}')                       
     # TODO: Refactor using the ORM    
     insert_response = engine.execute(
-                f'''
-                    INSERT INTO ex_rates(code,rate,base_rate_code,date) 
-                    VALUES ('{code}',{rate},'{base_rate_code}','{date}');
-                '''
-            )
+        f'''
+            INSERT INTO ex_rates(code,rate,base_rate_code,date) 
+            VALUES ('{code}',{rate},'{base_rate_code}','{date}');
+        '''
+    )
     logger.info(f'Created "{insert_response.rowcount}" records')
 
 def delete_rates_by_date(date, engine):

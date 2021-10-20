@@ -2,7 +2,7 @@
 
 Analysis on **[Apache Airflow](https://airflow.apache.org/)** (AA) and collation of interesting documentation, videos and examples to help setup and run through docker, for help to develop using this very interesting tool. I just recently came across this tool and a practical application for its use with a government project I am working with, and found this to be a very facinating tool to add to my arsenal for solving software engineering problems.
 
-AA is an open source platform to programmatically orchestrate workflows. This has a built in chronological schedular and a configurable workflow mechanism for creating task oriented solutions that can run several things sequentially and in parallel. Some slides have been shared for [Introducing Apache Airflow](./introducing-apache-airflow-slides.pdf).
+AA is an open source platform to programmatically orchestrate workflows. This has a built in chronological schedular and a configurable workflow mechanism for creating task oriented solutions that can run several things sequentially and in parallel.
 
 Why should you learn AA? Extensibility, Reliability, Scalable and able to guarantee SLA's.
 
@@ -58,7 +58,7 @@ Why should you learn AA? Extensibility, Reliability, Scalable and able to guaran
       ```python
       from airflow import DAG
       from airflow.operators.bash import BashOperator
-  
+    
       with DAG(
           dag_id='example_bash_operator',
           schedule_interval='0 0 * * *',
