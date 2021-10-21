@@ -109,9 +109,9 @@ with DAG(dag_id='exchange_rates_dag',
         sql='''CREATE TABLE IF NOT EXISTS ex_rates (
                 code VARCHAR(3) NOT NULL,
                 rate DECIMAL NOT NULL,
-                base_code VARCHAR(3) NOT NULL,
+                base_rate_code VARCHAR(3) NOT NULL,
                 date DATE NOT NULL,
-                PRIMARY KEY (code, base_code, date)
+                CONSTRAINT pk_ex_rates PRIMARY KEY (code, base_rate_code, date)
                 );''',
         postgres_conn_id='postgres',
         database='exercise1'

@@ -62,7 +62,7 @@ with DAG(dag_id='currency_codes_dag',
                 country VARCHAR(100) NOT NULL,
                 currency VARCHAR(50) NOT NULL,
                 number INTEGER NOT NULL,
-                PRIMARY KEY (code, country)
+                CONSTRAINT pk_currency_codes PRIMARY KEY (code, country)
                 );''',
         postgres_conn_id='postgres',
         database='exercise1'
