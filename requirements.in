@@ -1,9 +1,7 @@
 requests
 pandas
-SQLAlchemy
-# pip install apache-airflow==1.10.9 as issue with the version
-# apache-airflow==1.10.9
-
+SQLAlchemy==1.3.23
+apache-airflow
 # dev stuff as we are only using this for tests its okay but not production worthy
 black
 pip-tools

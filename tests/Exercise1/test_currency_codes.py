@@ -10,4 +10,4 @@ def test_dag_loaded(dagbag):
     dag = dagbag.get_dag(dag_id="currency_codes_dag")
     assert dagbag.import_errors == {}
     assert dag is not None
-    assert len(dag.tasks) == 1
+    assert len(dag.tasks) == 3
