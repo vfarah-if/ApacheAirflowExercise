@@ -58,11 +58,13 @@ with DAG(dag_id='currency_codes_dag',
         task_id='create_table_currency_codes_if_not_exists',
         sql='''CREATE TABLE IF NOT EXISTS currency_codes (
                 id INT GENERATED ALWAYS AS IDENTITY,
+            
                 code VARCHAR(3) NOT NULL,
                 country VARCHAR(100) NOT NULL,
                 currency VARCHAR(50) NOT NULL,
                 number INTEGER NOT NULL,
-                CONSTRAINT pk_currency_codes PRIMARY KEY (code, country)
+                CONSTRAINT pk_currency_codes PRIMARY KEY (id),
+                CONSTRAINT unique_code_country UNIQUE(code, country)
                 );''',
         postgres_conn_id='postgres',
         database='exercise1'
